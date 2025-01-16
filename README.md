@@ -11,6 +11,7 @@ Steps on creating API using express
    "test": "echo \"Error: no test specified\" && exit 1",
    "start": "node app.js"
    },
+5. Create app.js
 
 # Set your global Git
 

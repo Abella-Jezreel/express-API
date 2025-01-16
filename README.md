@@ -9,7 +9,7 @@ Steps on creating API using express
 5. set-up package.json
    "scripts": {
    "test": "echo \"Error: no test specified\" && exit 1",
-   "start": "node app.js"
+   "start": "nodemon app.js"
    },
 5. Create app.js
 6. npm install --save body-parser

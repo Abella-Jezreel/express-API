@@ -1,7 +1,17 @@
 const express = require('express');
-const app = express();
+const bodyParser = require('body-parser');
 
 const feedRoutes = require('./routes/feed');
+
+const app = express();
+app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        console.log(res.getHeaders());
+    });
+    next();
+});
 
 app.use('/feed', feedRoutes);
 

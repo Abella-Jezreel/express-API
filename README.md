@@ -12,6 +12,8 @@ Steps on creating API using express
    "start": "node app.js"
    },
 5. Create app.js
+6. npm install --save body-parser
+7. create a separate router
 
 # Set your global Git
 

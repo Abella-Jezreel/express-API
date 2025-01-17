@@ -3,7 +3,8 @@ exports.getPosts = (req, res, next) => {
         posts: [
             {
                 title: 'First Post',
-                content: 'This is the first post!'
+                content: 'This is the first post!',
+                imageUrl: 'images/duck.jpg', // This is a dummy URL
             }
         ]
     });

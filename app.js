@@ -22,8 +22,8 @@ app.get('/', (req, res) => {
     res.send('Welcome to the Express API');
 });
 
-app.listen(3001, () => {
-    console.log('Server is running on port 3001');
+app.listen(8080, () => {
+    console.log('Server is running on port 8080');
     }
 );
 

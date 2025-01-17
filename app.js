@@ -26,11 +26,11 @@ app.get("/", (req, res) => {
 });
 
 mongoose
-  .connect("mongodb+srv://teamabella:Dreambig060420!@cluster0.yf3vq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  .connect("mongodb+srv://teamabella:Dreambig060420!@cluster0.yf3vq.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0")
   .then((result) => {
     console.log("Connected to MongoDB");
-    app.listen(8081, () => {
-      console.log("Server is running on port 8081");
+    app.listen(8080, () => {
+      console.log("Server is running on port 8080");
     });
   })
   .catch((err) => console.log(err));

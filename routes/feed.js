@@ -5,10 +5,10 @@ const feedController = require('../controllers/feed');
 
 const router = express.Router();
 
-router.get('/post', feedController.getPosts);
+router.get('/post', feedController.getPosts); 
 router.post('/post', [
     body('title').trim().isLength({ min: 5 }),
     body('content').trim().isLength({ min: 5 }),
-], feedController.createPost);
+], feedController.createPost);  
 
 module.exports = router;

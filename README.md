@@ -16,6 +16,7 @@ Steps on creating API using express
 7. create a separate router
 8. create a separate controller
 9. create server side validator using express validator
+10. create a database to save the data using mongoose
 
 # Set your global Git
 

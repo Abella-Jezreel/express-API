@@ -19,6 +19,8 @@ Steps on creating API using express
 10. create a database to save the data using mongoDB npm install --save mongoose
 11. create a models to interact with the database
 12. static image and error handling middleware
+13. create a contoller for single post
+14. use multer for file aploading like image npm install multer
 
 # Set your global Git
 

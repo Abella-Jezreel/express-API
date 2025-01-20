@@ -30,11 +30,13 @@ const clearImage = (filePath) => {
 };
 
 exports.getPosts = async (req, res, next) => {
+  const currentPage = req.query.page || 1; // Get the current page from the query params
+  const perPage = 2; //Items per page
+  const skip = (currentPage - 1) * perPage; // Skip the first items
   try {
-    const posts = await Post.find();
-    res.status(200).json({
-      posts: posts,
-    });
+    const totalItems = await Post.find().countDocuments();
+    const posts = await Post.find().skip(skip).limit(perPage);
+    res.status(200).json({ message: 'Fetched posts successfully.', posts: posts, totalItems: totalItems });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -162,7 +164,7 @@ exports.createPost = (req, res, next) => {
     title: title,
     content: content,
     imageUrl: imageUrl,
-    creator: { name: "John Doe" },
+    creator: { name: "Abraham Flynn" },
   });
 
   post

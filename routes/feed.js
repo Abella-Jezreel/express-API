@@ -34,4 +34,11 @@ router.put(
   feedController.updatePost
 );
 
+router.delete(
+  "/post/:postId",
+  isAuth,
+  param("postId").isMongoId(),
+  feedController.deletePost
+);
+
 module.exports = router;

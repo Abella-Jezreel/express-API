@@ -21,6 +21,8 @@ Steps on creating API using express
 12. static image and error handling middleware
 13. create a contoller for single post
 14. use multer for file aploading like image npm install multer
+15. Create authentication using JWT 
+16. Create Post and User realtion via Models
 
 # Set your global Git
 

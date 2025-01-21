@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 const Post = require("../models/post");
 const User = require("../models/user");
 
@@ -22,7 +22,7 @@ const User = require("../models/user");
 // };
 
 const clearImage = (filePath) => {
-  filePath = path.join(__dirname, '..', filePath);
+  filePath = path.join(__dirname, "..", filePath);
   fs.unlink(filePath, (err) => {
     if (err) {
       console.log(err);
@@ -32,12 +32,18 @@ const clearImage = (filePath) => {
 
 exports.getPosts = async (req, res, next) => {
   const currentPage = req.query.page || 1; // Get the current page from the query params
-  const perPage = 2; //Items per page
+  const perPage = 5; //Items per page
   const skip = (currentPage - 1) * perPage; // Skip the first items
   try {
     const totalItems = await Post.find().countDocuments();
     const posts = await Post.find().skip(skip).limit(perPage);
-    res.status(200).json({ message: 'Fetched posts successfully.', posts: posts, totalItems: totalItems });
+    res
+      .status(200)
+      .json({
+        message: "Fetched posts successfully.",
+        posts: posts,
+        totalItems: totalItems,
+      });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -50,16 +56,16 @@ exports.getPosts = async (req, res, next) => {
 exports.getPost = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const error = new Error('Invalid post ID.');
+    const error = new Error("Invalid post ID.");
     error.statusCode = 422;
     return next(error);
   }
- 
+
   const postId = req.params.postId;
   try {
     const post = await Post.findById(postId);
     if (!post) {
-      const error = new Error('Could not find post.');
+      const error = new Error("Could not find post.");
       error.statusCode = 404;
       throw error;
     }
@@ -86,7 +92,7 @@ exports.updatePost = (req, res, next) => {
   let imageUrl = req.body.imageUrl;
 
   if (req.file) {
-    imageUrl = req.file.path.replace(/\\/g, '/');
+    imageUrl = req.file.path.replace(/\\/g, "/");
   }
   if (!imageUrl) {
     const error = new Error("No file picked.");
@@ -99,6 +105,11 @@ exports.updatePost = (req, res, next) => {
       if (!post) {
         const error = new Error("Could not find post.");
         error.statusCode = 404;
+        throw error;
+      }
+      if (post.creator.toString() !== req.userId) {
+        const error = new Error("Not authorized!");
+        error.statusCode = 403;
         throw error;
       }
       if (imageUrl !== post.imageUrl) {
@@ -129,6 +140,13 @@ exports.deletePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
+      // Check logged in user
+      if (post.creator.toString() !== req.userId) {
+        const error = new Error("Not authorized!");
+        error.statusCode = 403;
+        throw error;
+      }
+      // Clear image
       clearImage(post.imageUrl);
       return Post.findByIdAndDelete(postId);
     })
@@ -142,7 +160,7 @@ exports.deletePost = (req, res, next) => {
       }
       next(err);
     });
-}
+};
 
 exports.createPost = (req, res, next) => {
   const errors = validationResult(req);
@@ -158,7 +176,7 @@ exports.createPost = (req, res, next) => {
     throw error;
   }
 
-  const imageUrl = req.file.path.replace(/\\/g, '/'); 
+  const imageUrl = req.file.path.replace(/\\/g, "/");
   const title = req.body.title;
   const content = req.body.content;
   console.log(req.user.name);
@@ -175,16 +193,17 @@ exports.createPost = (req, res, next) => {
     .then((result) => {
       console.log(result);
       return User.findById(req.userId);
-    }).then(user => {
+    })
+    .then((user) => {
       creator = user;
       user.posts.push(post);
       return user.save();
-    }
-    ).then(result => {
+    })
+    .then((result) => {
       res.status(201).json({
         message: "Post created successfully!",
         post: post,
-        creator: { _id: creator._id, name: creator.name }
+        creator: { _id: creator._id, name: creator.name },
       });
     })
     .catch((err) => {

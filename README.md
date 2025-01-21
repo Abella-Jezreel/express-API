@@ -23,6 +23,7 @@ Steps on creating API using express
 14. use multer for file aploading like image npm install multer
 15. Create authentication using JWT 
 16. Create Post and User realtion via Models
+17. Create a auth for the delete and update like like the only post you can delete is your own post
 
 # Set your global Git
 

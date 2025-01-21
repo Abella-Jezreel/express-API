@@ -37,13 +37,11 @@ exports.getPosts = async (req, res, next) => {
   try {
     const totalItems = await Post.find().countDocuments();
     const posts = await Post.find().skip(skip).limit(perPage);
-    res
-      .status(200)
-      .json({
-        message: "Fetched posts successfully.",
-        posts: posts,
-        totalItems: totalItems,
-      });
+    res.status(200).json({
+      message: "Fetched posts successfully.",
+      posts: posts,
+      totalItems: totalItems,
+    });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -151,8 +149,15 @@ exports.deletePost = (req, res, next) => {
       return Post.findByIdAndDelete(postId);
     })
     .then((result) => {
-      console.log(result);
-      res.status(200).json({ message: "Deleted post." });
+      User.findById(req.userId)
+        .then((user) => {
+          user.posts.pull(postId);
+          return user.save();
+        })
+        .then((result) => {
+          res.status(200).json({ message: "Deleted post." });
+          console.log(result);
+        });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -213,6 +218,7 @@ exports.createPost = (req, res, next) => {
       }
       next(err); // Pass the error to the next middleware
     });
+
 
   // Create post in db
   // res.status(201).json({

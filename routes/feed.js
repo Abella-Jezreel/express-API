@@ -22,7 +22,7 @@ router.post(
   ],
   feedController.createPost
 );
-
+ 
 router.put(
   "/post/:postId",
   isAuth,

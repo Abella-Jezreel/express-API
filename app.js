@@ -1,16 +1,16 @@
 const path = require("path");
-const fs = require('fs'); 
+const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const multer = require("multer");
 
 const feedRoutes = require("./routes/feed");
-const authRoutes = require('./routes/auth');
+const authRoutes = require("./routes/auth");
 
 const app = express();
 
-const imagesDir = path.join(__dirname, 'images');
+const imagesDir = path.join(__dirname, "images");
 if (!fs.existsSync(imagesDir)) {
   fs.mkdirSync(imagesDir);
 }
@@ -20,8 +20,13 @@ const fileStorage = multer.diskStorage({
     cb(null, "images");
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname.replace(/\s/g, '_'));
-  }
+    cb(
+      null,
+      new Date().toISOString().replace(/:/g, "-") +
+        "-" +
+        file.originalname.replace(/\s/g, "_")
+    );
+  },
 });
 
 const fileFilter = (req, file, cb) => {
@@ -56,7 +61,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/feed", feedRoutes);
-app.use('/auth', authRoutes);
+app.use("/auth", authRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -72,16 +77,13 @@ app.get("/", (req, res) => {
 
 mongoose
   .connect(
-    "mongodb+srv://teamabella:Dreambig060420!@cluster0.yf3vq.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0"
+    'mongodb+srv://teamabella:Dreambig060420!@cluster0.yf3vq.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0'
   )
   .then((result) => {
-    console.log("Connected to MongoDB");
-   const server =  app.listen(8080, () => {
-      console.log("Server is running on port 8080");
+    console.log('Connected to MongoDB');
+    const server = app.listen(8080, () => {
+      console.log('Server is running on port 8080');
     });
-    const io = require('socket.io')(server);
-    io.on('connection', socket => {
-      console.log('Client connected');
-    });
+    const io = require('./socket').init(server);
   })
   .catch((err) => console.log(err));

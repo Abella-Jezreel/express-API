@@ -24,6 +24,7 @@ Steps on creating API using express
 15. Create authentication using JWT 
 16. Create Post and User realtion via Models
 17. Create a auth for the delete and update like like the only post you can delete is your own post
+18. Convert promises to async/await try/catch for handling asynchromous js elegantly
 
 # Set your global Git
 

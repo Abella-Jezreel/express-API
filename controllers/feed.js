@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const Post = require("../models/post");
 const User = require("../models/user");
+const io = require("../socket");
 
 // exports.getPosts = (req, res, next) => {
 //   res.status(200).json({

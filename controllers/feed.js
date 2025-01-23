@@ -37,7 +37,10 @@ exports.getPosts = async (req, res, next) => {
   const skip = (currentPage - 1) * perPage; // Skip the first items
   try {
     const totalItems = await Post.find().countDocuments();
-    const posts = await Post.find().skip(skip).limit(perPage);
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(perPage);
     res.status(200).json({
       message: "Fetched posts successfully.",
       posts: posts,
@@ -133,13 +136,13 @@ exports.deletePost = async (req, res, next) => {
   try {
     const post = await Post.findById(postId);
     if (!post) {
-      const error = new Error('Could not find post.');
+      const error = new Error("Could not find post.");
       error.statusCode = 404;
       throw error;
     }
     // Check logged in user
     if (post.creator.toString() !== req.userId) {
-      const error = new Error('Not authorized!');
+      const error = new Error("Not authorized!");
       error.statusCode = 403;
       throw error;
     }
@@ -150,8 +153,8 @@ exports.deletePost = async (req, res, next) => {
     const user = await User.findById(req.userId);
     user.posts.pull(postId);
     await user.save();
-    io.getIO().emit('posts', { action: 'delete', post: postId });
-    res.status(200).json({ message: 'Deleted post.' });
+    io.getIO().emit("posts", { action: "delete", post: postId });
+    res.status(200).json({ message: "Deleted post." });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
